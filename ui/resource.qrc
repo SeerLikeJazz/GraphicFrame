@@ -1,0 +1,45 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>../resources/icons/training.png</file>
+    <file>../resources/icons/info.svg</file>
+    <file>../resources/icons/link.svg</file>
+    <file>../resources/icons/link-2.svg</file>
+    <file>../resources/icons/finish.png</file>
+    <file>../resources/icons/bar-chart-2.svg</file>
+    <file>../resources/icons/box.svg</file>
+    <file>../resources/icons/link.ico</file>
+    <file>../resources/icons/play-circle.svg</file>
+    <file>../resources/icons/save.svg</file>
+    <file>../resources/icons/sliders.svg</file>
+    <file>../resources/icons/stop-circle.svg</file>
+    <file>../resources/icons/bar-chart-2.svg</file>
+    <file>../resources/icons/toggle-left.svg</file>
+    <file>../resources/icons/battery.png</file>
+    <file>../resources/icons/toggle-right.svg</file>
+  </qresource>
+  <qresource prefix="gestures">
+    <file>../resources/hand/choose.png</file>
+    <file>../resources/hand/checked.png</file>
+    <file>../resources/hand/1.png</file>
+    <file>../resources/hand/2.png</file>
+    <file>../resources/hand/3.png</file>
+    <file>../resources/hand/4.png</file>
+    <file>../resources/hand/5.png</file>
+    <file>../resources/hand/6.png</file>
+    <file>../resources/hand/7.png</file>
+    <file>../resources/hand/8.png</file>
+    <file>../resources/hand/9.png</file>
+    <file>../resources/hand/10.png</file>
+    <file>../resources/hand/11.png</file>
+    <file>../resources/hand/12.png</file>
+    <file>../resources/hand/13.png</file>
+    <file>../resources/hand/14.png</file>
+    <file>../resources/hand/15.png</file>
+    <file>../resources/hand/16.png</file>
+    <file>../resources/hand/rest.png</file>
+  </qresource>
+  <qresource prefix="logos">
+    <file>../resources/econ.png</file>
+    <file>../resources/logo.png</file>
+  </qresource>
+</RCC>

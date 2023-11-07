@@ -1,0 +1,8 @@
+pyqtgraph
+pyserial
+PySide6
+matplotlib
+numpy
+scipy
+pyautogui
+pydirectinput
