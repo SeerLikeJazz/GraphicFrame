@@ -4,7 +4,7 @@ import time
 
 
 
-class com_socket():
+class UsbCDC_socket():
     order = {500: b"\x55\x66\x52\x41\x54\x45\x01\x0A",
              1000: b"\x55\x66\x52\x41\x54\x45\x02\x0A",
              2000: b"\x55\x66\x52\x41\x54\x45\x03\x0A",

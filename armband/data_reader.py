@@ -1,7 +1,7 @@
 import time, traceback
 from multiprocessing import Process, Queue, Value
 import queue
-from .device_socket import com_socket as device_socket
+from .device_socket import UsbCDC_socket as device_socket
 
 CAP_SIGNAL = 10
 CAP_SIGNAL_START = 11

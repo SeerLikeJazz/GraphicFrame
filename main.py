@@ -21,11 +21,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.GroupBox_signal.setTitle(
             "EMG Signal({}\u00b5V/Div-{}s/page)".format(int(vs), ts)
         )
-        self.emg_plot = EmgPlot(
+        self.emg_plot = SigPlot(
             fs=self.fs,
             channels=self.emg_channels,
-            imu_channels=0,
-            fpi=self.frames_per_imu,
             ts=ts,
             vs=vs,
         )
@@ -236,7 +234,7 @@ if __name__ == "__main__":
         QMessageBox,
         QMainWindow,
     )
-    from signal_plot import EmgPlot
+    from signal_plot import SigPlot
     from armband import iArmBand
 
     # os.chdir(os.path.dirname(os.path.abspath(__file__))) #for mac use
