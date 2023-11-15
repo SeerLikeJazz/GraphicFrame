@@ -15,11 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QButtonGroup, QCheckBox, QComboBox,
-    QFrame, QGridLayout, QGroupBox, QHBoxLayout,
-    QLabel, QLayout, QMainWindow, QPushButton,
-    QSizePolicy, QSpacerItem, QStackedWidget, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QButtonGroup, QComboBox, QFrame,
+    QGridLayout, QGroupBox, QHBoxLayout, QLabel,
+    QLayout, QMainWindow, QPushButton, QSizePolicy,
+    QSpacerItem, QStackedWidget, QVBoxLayout, QWidget)
 from . import resource_rc
 
 class Ui_MainWindow(object):
@@ -180,21 +179,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_start_page.addItem(self.verticalSpacer_2)
 
-        self.label_2 = QLabel(self.page_connect)
-        self.label_2.setObjectName(u"label_2")
-        sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
-        self.label_2.setSizePolicy(sizePolicy)
-        font1 = QFont()
-        font1.setPointSize(10)
-        self.label_2.setFont(font1)
-        self.label_2.setAlignment(Qt.AlignCenter)
-
-        self.verticalLayout_start_page.addWidget(self.label_2)
-
-        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_start_page.addItem(self.verticalSpacer_5)
-
         self.horizontalFrame = QFrame(self.page_connect)
         self.horizontalFrame.setObjectName(u"horizontalFrame")
         self.verticalLayout_10 = QVBoxLayout(self.horizontalFrame)
@@ -208,9 +192,9 @@ class Ui_MainWindow(object):
         self.pushButton_connect.setSizePolicy(sizePolicy2)
         self.pushButton_connect.setMinimumSize(QSize(120, 40))
         self.pushButton_connect.setMaximumSize(QSize(120, 40))
-        font2 = QFont()
-        font2.setPointSize(11)
-        self.pushButton_connect.setFont(font2)
+        font1 = QFont()
+        font1.setPointSize(11)
+        self.pushButton_connect.setFont(font1)
         self.pushButton_connect.setInputMethodHints(Qt.ImhSensitiveData)
         icon2 = QIcon()
         icon2.addFile(u":/icons/resources/icons/link.svg", QSize(), QIcon.Normal, QIcon.Off)
@@ -219,21 +203,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_10.addWidget(self.pushButton_connect)
 
-        self.checkBox_imu = QCheckBox(self.horizontalFrame)
-        self.checkBox_imu.setObjectName(u"checkBox_imu")
-        self.checkBox_imu.setMaximumSize(QSize(100, 40))
-        self.checkBox_imu.setChecked(False)
-
-        self.verticalLayout_10.addWidget(self.checkBox_imu, 0, Qt.AlignHCenter)
-
-        self.checkBox_vib = QCheckBox(self.horizontalFrame)
-        self.checkBox_vib.setObjectName(u"checkBox_vib")
-        self.checkBox_vib.setMaximumSize(QSize(100, 40))
-        self.checkBox_vib.setChecked(False)
-
-        self.verticalLayout_10.addWidget(self.checkBox_vib, 0, Qt.AlignHCenter)
-
-        self.verticalLayout_10.setStretch(1, 2)
 
         self.verticalLayout_start_page.addWidget(self.horizontalFrame, 0, Qt.AlignHCenter|Qt.AlignVCenter)
 
@@ -243,7 +212,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_start_page.setStretch(0, 2)
         self.verticalLayout_start_page.setStretch(1, 2)
-        self.verticalLayout_start_page.setStretch(7, 1)
+        self.verticalLayout_start_page.setStretch(5, 1)
 
         self.verticalLayout_2.addLayout(self.verticalLayout_start_page)
 
@@ -375,8 +344,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(0)
-        self.comboBox_highpass.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(1)
+        self.comboBox_highpass.setCurrentIndex(2)
         self.comboBox_lowpass.setCurrentIndex(0)
         self.comboBox_notch.setCurrentIndex(1)
 
@@ -392,11 +361,8 @@ class Ui_MainWindow(object):
         self.label_3.setText("")
         self.label_battery.setText("")
         self.label_start_page.setText("")
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Welcome to use eCon smart EMG armband", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Please wear the band correctly and connect to it", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Welcome to use iRecorder", None))
         self.pushButton_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
-        self.checkBox_imu.setText(QCoreApplication.translate("MainWindow", u"Enable IMU", None))
-        self.checkBox_vib.setText(QCoreApplication.translate("MainWindow", u"Viberate", None))
         self.GroupBox_signal.setTitle(QCoreApplication.translate("MainWindow", u"EMG Signal(100\u00b5V/Div-2s/page)", None))
         self.groupBox_filter.setTitle(QCoreApplication.translate("MainWindow", u"Filter", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"High Pass (Hz)", None))
@@ -406,7 +372,7 @@ class Ui_MainWindow(object):
         self.comboBox_highpass.setItemText(3, QCoreApplication.translate("MainWindow", u"5", None))
         self.comboBox_highpass.setItemText(4, QCoreApplication.translate("MainWindow", u"20", None))
 
-        self.comboBox_highpass.setCurrentText(QCoreApplication.translate("MainWindow", u"20", None))
+        self.comboBox_highpass.setCurrentText(QCoreApplication.translate("MainWindow", u"1", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Low Pass (Hz)", None))
         self.comboBox_lowpass.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.comboBox_lowpass.setItemText(1, QCoreApplication.translate("MainWindow", u"30", None))

@@ -21,9 +21,7 @@ class UsbCDC_socket():
 
     def __init__(self, port) -> None:
         import serial
-        self.__socket = serial.Serial(port=port)
-        # self.__socket=serial.Serial(port=self.__sock_args['port'], baudrate=2000000, rtscts=False, parity=serial.PARITY_NONE,
-        #                              stopbits=serial.STOPBITS_ONE)# If a "port" is given, then the port will be opened immediately
+        self.__socket = serial.Serial(port=port)  # If a "port" is given, then the port will be opened immediately
 
     def connect_socket(self):
         # self.__socket.flushInput()
@@ -39,19 +37,19 @@ class UsbCDC_socket():
         self.__socket = None
         print('socket closed')
 
-    def start_impe(self):
-        self.__socket.write(self.order['Z'])
-        time.sleep(0.1)
-        self.__socket.read(len(self.order['Z']))
+    def recv_socket(self, buffersize: int = 2048):
+        return self.__socket.read(buffersize)
+
+    # def start_impe(self):
+    #     self.__socket.write(self.order['Z'])
+    #     time.sleep(0.1)
+    #     self.__socket.read(len(self.order['Z']))
 
     def start_data(self):
         # self.__socket.flushInput()
         self.__socket.write(self.order['W'])
         time.sleep(0.1)
         self.__socket.read(len(self.order['W']))
-
-    def recv_socket(self, buffersize: int = 2048):
-        return self.__socket.read(buffersize)
 
     def stop_recv(self):
         self.__socket.write(self.order['R'])
@@ -63,6 +61,6 @@ class UsbCDC_socket():
         time.sleep(0.1)
         ret = self.__socket.read(len(self.order['B']) + 1)
         print('batt raw', ret)
-        battery = int(ret[-1:][0])
+        battery = int(ret[-1])
         print('batt level:', battery)
         return battery

@@ -9,74 +9,61 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
-        self.emg_channels = 32
-        # self.imu_channels = 6 if self.checkBox_imu.isChecked() else 0
-        # self.checkBox_vib.setVisible(False)
+        self.eeg_channels = 32
         self.fs = 500
-        self.frames_per_imu = 9
-
-        ts = 5  # seconds
-        vs = 50  # uV
+        timescale = 5  # seconds
+        vertscale = 50  # uV
         self.GroupBox_signal.setTitle(
-            "EMG Signal({}\u00b5V/Div-{}s/page)".format(int(vs), ts)
+            "EEG Signal({}\u00b5V/Div-{}s/page)".format(int(vertscale), timescale)
         )
-        self.emg_plot = SigPlot(
+        self.eeg_plot = SigPlot(
             fs=self.fs,
-            channels=self.emg_channels,
-            ts=ts,
-            vs=vs,
+            channels=self.eeg_channels,
+            timescale=timescale,
+            vertscale=vertscale,
         )
 
         self.data_timer = QTimer(self)
         self.data_timer.timeout.connect(self.process_data)
-        self.emg_watchdog_timer = QTimer(self)
-        self.emg_watchdog_timer.timeout.connect(self.emg_watchdog)
+        self.eeg_watchdog_timer = QTimer(self)
+        self.eeg_watchdog_timer.timeout.connect(self.emg_watchdog)
         self.stackedWidget.setCurrentIndex(0)
         self.socket_flag = Value("i", 0)
-        self.armband = None
+        self.iRecorder = None
 
         self.on_comboBox_highpass_currentIndexChanged()
         self.on_comboBox_lowpass_currentIndexChanged()
         self.on_comboBox_notch_currentIndexChanged()
 
-
-
     def process_data(self):
-        data_frames = np.array(self.armband.get_data(), dtype=np.float32)
+        data_frames = np.array(self.iRecorder.get_data(), dtype=np.float32)
         if len(data_frames) == 0:
             return
 
-        data_frames[:, : self.emg_channels] = (
-            data_frames[:, : self.emg_channels] * 0.02235174
+        data_frames[:, : self.eeg_channels] = (
+            data_frames[:, : self.eeg_channels] * 0.02235174
         )
         plotdata = self.filt_data(data_frames)
 
         for frame, plot in zip(data_frames, plotdata):
-            self.emg_plot.update_data(plot)
-
-
+            self.eeg_plot.update_data(plot)
 
     @Slot(bool)
     def on_pushButton_connect_toggled(self, checked):
         if checked:
-            # port = iArmBand.get_device()
-            port = "COM47"
+            port = MyDevice.get_device()
+            # port = "COM47"
             if port is not None:
                 self.pushButton_connect.setText("Disconnect")
-                self.armband = iArmBand(
+                self.iRecorder = MyDevice(
                     port,
                     self.socket_flag,
-                    imu=self.checkBox_imu.isChecked(),
-                    vib=self.checkBox_vib.isChecked(),
                 )
-                self.armband.start()
+                self.iRecorder.start()
                 self.battery_value = -1
-                self.checkBox_imu.setEnabled(False)
-                self.checkBox_vib.setEnabled(False)
                 self.data_timer.start(15)
-                self.emg_watchdog_timer.start(500)
-                self.label_2.setText(
+                self.eeg_watchdog_timer.start(500)
+                self.label.setText(
                     "Connection successfully established: " + str(port)
                 )
             else:
@@ -89,22 +76,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         else:
             self.data_timer.stop()
-            self.emg_watchdog_timer.stop()
+            self.eeg_watchdog_timer.stop()
             self.pushButton_connect.setText("Connect")
             self.label_battery.setText("")
-            self.checkBox_imu.setEnabled(True)
-            self.checkBox_vib.setEnabled(True)
-            if self.armband is not None:
-                self.armband.close_cap()
-                self.armband.terminate()
-                self.armband = None
-                self.label_2.setText("Welcome to use eCon smart EMG armband")
+            if self.iRecorder is not None:
+                self.iRecorder.close_cap()
+                self.iRecorder.terminate()
+                self.iRecorder = None
+                self.label.setText("Welcome to use iRecorder")
 
     def emg_watchdog(self):
         if self.socket_flag.value in [0, 1]:
             return
         elif self.socket_flag.value == 2:
-            bat = self.armband.get_battery_value()
+            bat = self.iRecorder.get_battery_value()
             if (self.battery_value != bat) and (bat >= 0) and (bat <= 100):
                 self.battery_value = bat
                 self.label_battery.setText("{}%".format(self.battery_value))
@@ -116,7 +101,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if self.socket_flag.value == 3:
                 warn = "Data transmission timeout"
             elif self.socket_flag.value == 4:
-                warn = "Please power up armband and try again."
+                warn = "Please power up iRecorder and try again."
             elif self.socket_flag.value == 5:
                 warn = "Heartbeat package sent failed"
             elif self.socket_flag.value == 6:
@@ -132,20 +117,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, "Warning", warn + ", please reconnect.")
             self.pushButton_connect.setChecked(False)
 
-
 ### 页面切换
     @Slot(QAbstractButton)
     def on_buttonGroup_buttonClicked(self, button):
-        self.emg_plot.resize(1, 1)
+        self.eeg_plot.resize(1, 1)
         if button == self.pushButton_menu_connect:
             self.stackedWidget.setCurrentWidget(self.page_connect)
         elif button == self.pushButton_menu_signal:
-            self.gridLayout_plot.addWidget(self.emg_plot)
+            self.gridLayout_plot.addWidget(self.eeg_plot)
             self.stackedWidget.setCurrentWidget(self.page_signal)
     #     elif button == self.pushButton_menu_train:
     #         self.ges_manager.set_gestures(self.horizontalLayout_7, True)
     #         self.ges_manager.set_focus(0)
-    #         self.gridLayout_sig.addWidget(self.emg_plot)
+    #         self.gridLayout_sig.addWidget(self.eeg_plot)
     #         self.stackedWidget.setCurrentWidget(self.page_train)
     #     elif button == self.pushButton_menu_test:
     #         self.stackedWidget.setCurrentWidget(self.page_test)
@@ -162,7 +146,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             Wnh = self.highpass / (self.fs / 2)
             self.filter_bh, self.filter_ah = butter(5, Wnh, btype="high")
             zih = lfilter_zi(self.filter_bh, self.filter_ah)
-            self.zih = [zih for _ in range(self.emg_channels)]
+            self.zih = [zih for _ in range(self.eeg_channels)]
 
     @Slot()
     def on_comboBox_notch_currentIndexChanged(self):
@@ -170,7 +154,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.notch is not None:
             self.notch_b, self.notch_a = iirnotch(w0=self.notch, Q=30.0, fs=self.fs)
             notch_zi = lfilter_zi(self.notch_b, self.notch_a)
-            self.notch_zi = [notch_zi for _ in range(self.emg_channels)]
+            self.notch_zi = [notch_zi for _ in range(self.eeg_channels)]
 
     @Slot()
     def on_comboBox_lowpass_currentIndexChanged(self):
@@ -179,22 +163,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             Wnl = self.lowpass / (self.fs / 2)
             self.filter_bl, self.filter_al = butter(4, Wnl, btype="low")
             zil = lfilter_zi(self.filter_bl, self.filter_al)
-            self.zil = [zil for _ in range(self.emg_channels)]
+            self.zil = [zil for _ in range(self.eeg_channels)]
 
     def filt_data(self, data: np.ndarray):
         plotdata = copy.deepcopy(data.T)
         if self.notch is not None:
-            for i in range(self.emg_channels):  # notch filter
+            for i in range(self.eeg_channels):  # notch filter
                 plotdata[i, :], self.notch_zi[i] = lfilter(
                     self.notch_b, self.notch_a, plotdata[i, :], zi=self.notch_zi[i]
                 )
         if self.highpass is not None:
-            for i in range(self.emg_channels):
+            for i in range(self.eeg_channels):
                 plotdata[i, :], self.zih[i] = lfilter(
                     self.filter_bh, self.filter_ah, plotdata[i, :], zi=self.zih[i]
                 )
         if self.lowpass is not None:
-            for i in range(self.emg_channels):
+            for i in range(self.eeg_channels):
                 plotdata[i, :], self.zil[i] = lfilter(
                     self.filter_bl, self.filter_al, plotdata[i, :], zi=self.zil[i]
                 )
@@ -235,7 +219,7 @@ if __name__ == "__main__":
         QMainWindow,
     )
     from signal_plot import SigPlot
-    from armband import iArmBand
+    from armband import MyDevice
 
     # os.chdir(os.path.dirname(os.path.abspath(__file__))) #for mac use
     print("Starting eConAlpha, please wait ...")

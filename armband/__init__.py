@@ -1,1 +1,1 @@
-from .data_reader import iArmBand
+from .data_reader import MyDevice

@@ -287,7 +287,7 @@
           <number>0</number>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="page_connect">
           <property name="sizePolicy">
@@ -313,7 +313,7 @@
             <number>0</number>
            </property>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_start_page" stretch="2,2,0,0,0,0,0,1">
+            <layout class="QVBoxLayout" name="verticalLayout_start_page" stretch="2,2,0,0,0,1">
              <item>
               <spacer name="verticalSpacer_3">
                <property name="sizePolicy">
@@ -371,7 +371,7 @@
                 <enum>Qt::LeftToRight</enum>
                </property>
                <property name="text">
-                <string>Welcome to use eCon smart EMG armband</string>
+                <string>Welcome to use iRecorder</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -397,49 +397,9 @@
                </property>
               </spacer>
              </item>
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>10</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Please wear the band correctly and connect to it</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="verticalSpacer_5">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
              <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
               <widget class="QFrame" name="horizontalFrame">
-               <layout class="QVBoxLayout" name="verticalLayout_10" stretch="0,2,0">
+               <layout class="QVBoxLayout" name="verticalLayout_10" stretch="0">
                 <item>
                  <widget class="QPushButton" name="pushButton_connect">
                   <property name="sizePolicy">
@@ -477,38 +437,6 @@
                   </property>
                   <property name="checkable">
                    <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QCheckBox" name="checkBox_imu">
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Enable IMU</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item alignment="Qt::AlignHCenter">
-                 <widget class="QCheckBox" name="checkBox_vib">
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Viberate</string>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
                   </property>
                  </widget>
                 </item>
@@ -640,10 +568,10 @@
                    <item>
                     <widget class="QComboBox" name="comboBox_highpass">
                      <property name="currentText">
-                      <string>20</string>
+                      <string>1</string>
                      </property>
                      <property name="currentIndex">
-                      <number>4</number>
+                      <number>2</number>
                      </property>
                      <item>
                       <property name="text">

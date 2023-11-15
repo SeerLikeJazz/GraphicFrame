@@ -11,8 +11,8 @@ CAP_END = 101
 CAP_TERMINATED = 102
 
 
-class iArmBand(Process):
-    def __init__(self, port, socket_flag: Value, imu: bool = True, vib: bool = True):
+class MyDevice(Process):
+    def __init__(self, port, socket_flag: Value):
         print("initing iRecorder")
         Process.__init__(self, daemon=True)
         self.socket_flag = socket_flag
@@ -20,21 +20,12 @@ class iArmBand(Process):
         self.__cap_status = Value("i", CAP_TERMINATED)
         self.__battery = Value("i", -1)
         self.port = port
-        self.band = Value("i", 0)
-        self.imu = imu
-        self.vib = vib
-
-    def shock_band(self):
-        if self.vib:
-            self.band.value = 1
-        else:
-            pass
 
     @staticmethod
     def get_device():
         devices = device_socket.devce_list()
         for device in devices:
-            if device.serial_number in ["ECONEMGA", "eConEMG"]:  # ECONEMGA for windows
+            if (device.pid == 22336) and (device.vid == 1155):
                 return device.device
         return None
 
@@ -118,7 +109,6 @@ class iArmBand(Process):
         self.__recv_thread = threading.Thread(target=self.socket_recv, daemon=True)
         self.__recv_thread.start()
         self.socket_flag.value = 2
-        self.shock_band()
         while True:
             if self.__cap_status.value == CAP_SIGNAL_START:
                 print("CAP_SIGNAL_START")
@@ -148,11 +138,6 @@ class iArmBand(Process):
                     data_list = self.__parser.parse_data(data)
                     if len(data_list) < 1:
                         continue
-                    # shock device if set
-                    if self.band.value == 1:
-                        self.__socket.shock()
-                        self.band.value = 0
-
                     self.__timestamp = time.time()
                     for data in data_list:
                         data[Parser.HOTKEY_TRIGGER] = self.sys_data

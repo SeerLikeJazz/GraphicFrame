@@ -4,14 +4,14 @@ import time, random
 
 
 class SigPlot(pg.PlotWidget):
-    def __init__(self, fs=500, channels=8, ts=5, vs=40) -> None:
+    def __init__(self, fs=500, channels=8, timescale=5, vertscale=40) -> None:
         super().__init__()
         self.fs = fs
-        self.fps = int(self.fs / 55) # ?
+        self.fps = int(self.fs / 55) # 55是刷新帧数
 
         self.channels = channels
-        self.time_scale = ts
-        self.vert_scale = vs
+        self.time_scale = timescale
+        self.vert_scale = vertscale
         self.__init_canvas()
 
     def __generate_cool_colors(self):
