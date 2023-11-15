@@ -35,6 +35,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.on_comboBox_lowpass_currentIndexChanged()
         self.on_comboBox_notch_currentIndexChanged()
 
+        self.gridLayout_plot.addWidget(self.eeg_plot)
+        self.stackedWidget.setCurrentWidget(self.page_signal)
+
     def process_data(self):
         data_frames = np.array(self.iRecorder.get_data(), dtype=np.float32)
         if len(data_frames) == 0:
@@ -63,9 +66,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.battery_value = -1
                 self.data_timer.start(15)
                 self.eeg_watchdog_timer.start(500)
-                self.label.setText(
-                    "Connection successfully established: " + str(port)
-                )
             else:
                 QMessageBox.information(
                     self,
@@ -83,7 +83,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.iRecorder.close_cap()
                 self.iRecorder.terminate()
                 self.iRecorder = None
-                self.label.setText("Welcome to use iRecorder")
 
     def emg_watchdog(self):
         if self.socket_flag.value in [0, 1]:
@@ -118,14 +117,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_connect.setChecked(False)
 
 ### 页面切换
-    @Slot(QAbstractButton)
-    def on_buttonGroup_buttonClicked(self, button):
-        self.eeg_plot.resize(1, 1)
-        if button == self.pushButton_menu_connect:
-            self.stackedWidget.setCurrentWidget(self.page_connect)
-        elif button == self.pushButton_menu_signal:
-            self.gridLayout_plot.addWidget(self.eeg_plot)
-            self.stackedWidget.setCurrentWidget(self.page_signal)
+    # @Slot(QAbstractButton)
+    # def on_buttonGroup_buttonClicked(self, button):
+    #     self.eeg_plot.resize(1, 1)
+    #     if button == self.pushButton_menu_connect:
+    #         self.stackedWidget.setCurrentWidget(self.page_connect)
+    #     elif button == self.pushButton_menu_signal:
+    #         self.gridLayout_plot.addWidget(self.eeg_plot)
+    #         self.stackedWidget.setCurrentWidget(self.page_signal)
     #     elif button == self.pushButton_menu_train:
     #         self.ges_manager.set_gestures(self.horizontalLayout_7, True)
     #         self.ges_manager.set_focus(0)
