@@ -1,5 +1,6 @@
 from ui import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow
+from armband.device_socket import UsbCDC_socket as device_socket
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     from PySide6.QtCore import Slot
@@ -34,9 +35,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.on_comboBox_highpass_currentIndexChanged()
         self.on_comboBox_lowpass_currentIndexChanged()
         self.on_comboBox_notch_currentIndexChanged()
-
+        # 把画布打开
         self.gridLayout_plot.addWidget(self.eeg_plot)
         self.stackedWidget.setCurrentWidget(self.page_signal)
+
+        # self.listWidget.clicked.connect(self.listclicked)
+
+    # def listclicked(self):
+
+        # self.close()
+        # self.deleteLater()
+
 
     def process_data(self):
         data_frames = np.array(self.iRecorder.get_data(), dtype=np.float32)
@@ -51,17 +60,60 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for frame, plot in zip(data_frames, plotdata):
             self.eeg_plot.update_data(plot)
 
+    @Slot()
+    def on_pushButton_search_clicked(self):
+            ports = MyDevice.get_device()
+            for port in ports:
+                self.listWidget.addItem(port.description)
+
+    @Slot(bool)
+    def on_pushButton_start_toggled(self, checked):
+        if checked:
+            self.iRecorder.start()
+            self.battery_value = -1
+            self.data_timer.start(15)
+            self.eeg_watchdog_timer.start(500)
+            self.pushButton_start.setText("Stop")
+        else:
+            self.data_timer.stop()
+            self.eeg_watchdog_timer.stop()
+            self.pushButton_start.setText("Start")
+            self.label_battery.setText("")
+            if self.iRecorder is not None:
+                self.iRecorder.close_cap()
+                self.iRecorder.terminate()
+                # self.iRecorder = None
+
     @Slot(bool)
     def on_pushButton_connect_toggled(self, checked):
         if checked:
-            port = MyDevice.get_device()
-            # port = "COM47"
+            # port = MyDevice.get_device()
+            port = "COM50"
             if port is not None:
                 self.pushButton_connect.setText("Disconnect")
                 self.iRecorder = MyDevice(
                     port,
                     self.socket_flag,
                 )
+
+
+                # print("port", port)
+                #
+                # self.socket_flag.value = 1
+                # self.__socket = device_socket(port)
+                # try:
+                #     self.__socket.connect_socket()
+                #     self.__socket.stop_recv()
+                #     self.__battery.value = self.__socket.send_heartbeat()
+                # except Exception:
+                #     self.socket_flag.value = 4
+                #     self.__socket.close_socket()
+                #     return
+                #
+                # print("cap socket connected!")
+
+
+
                 self.iRecorder.start()
                 self.battery_value = -1
                 self.data_timer.start(15)

@@ -24,10 +24,11 @@ class MyDevice(Process):
     @staticmethod
     def get_device():
         devices = device_socket.devce_list()
-        for device in devices:
-            if (device.pid == 22336) and (device.vid == 1155):
-                return device.device
-        return None
+        return devices
+        # for device in devices:
+        #     if (device.pid == 22336) and (device.vid == 1155):
+        #         return device.description
+        # return None
 
     def start_acquisition_data(self):
         if self.__cap_status.value == CAP_TERMINATED:

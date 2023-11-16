@@ -17,8 +17,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
     QGroupBox, QHBoxLayout, QLabel, QLayout,
-    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
-    QStackedWidget, QTabWidget, QVBoxLayout, QWidget)
+    QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
+    QPushButton, QSizePolicy, QSpacerItem, QStackedWidget,
+    QTabWidget, QVBoxLayout, QWidget)
 from . import resource_rc
 
 class Ui_MainWindow(object):
@@ -57,63 +58,188 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabPosition(QTabWidget.North)
         self.tab = QWidget()
         self.tab.setObjectName(u"tab")
-        self.horizontalLayoutWidget = QWidget(self.tab)
-        self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
-        self.horizontalLayoutWidget.setGeometry(QRect(0, 30, 201, 211))
-        self.verticalLayout_2 = QVBoxLayout(self.horizontalLayoutWidget)
+        self.verticalLayout_5 = QVBoxLayout(self.tab)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.pushButton_connect = QPushButton(self.horizontalLayoutWidget)
+        self.groupBox_3 = QGroupBox(self.tab)
+        self.groupBox_3.setObjectName(u"groupBox_3")
+        self.verticalLayout_10 = QVBoxLayout(self.groupBox_3)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.listWidget = QListWidget(self.groupBox_3)
+        self.listWidget.setObjectName(u"listWidget")
+
+        self.verticalLayout_10.addWidget(self.listWidget)
+
+        self.horizontalLayout_8 = QHBoxLayout()
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.pushButton_search = QPushButton(self.groupBox_3)
+        self.pushButton_search.setObjectName(u"pushButton_search")
+        self.pushButton_search.setMaximumSize(QSize(16777215, 40))
+        font = QFont()
+        font.setPointSize(11)
+        self.pushButton_search.setFont(font)
+        self.pushButton_search.setCheckable(False)
+
+        self.horizontalLayout_8.addWidget(self.pushButton_search)
+
+        self.pushButton_connect = QPushButton(self.groupBox_3)
         self.pushButton_connect.setObjectName(u"pushButton_connect")
         sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.pushButton_connect.sizePolicy().hasHeightForWidth())
         self.pushButton_connect.setSizePolicy(sizePolicy)
-        self.pushButton_connect.setMinimumSize(QSize(120, 40))
-        self.pushButton_connect.setMaximumSize(QSize(120, 40))
-        font = QFont()
-        font.setPointSize(11)
+        self.pushButton_connect.setMinimumSize(QSize(0, 0))
+        self.pushButton_connect.setMaximumSize(QSize(16777215, 40))
         self.pushButton_connect.setFont(font)
         self.pushButton_connect.setInputMethodHints(Qt.ImhSensitiveData)
-        icon = QIcon()
-        icon.addFile(u":/icons/resources/icons/link.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.pushButton_connect.setIcon(icon)
         self.pushButton_connect.setCheckable(True)
 
-        self.verticalLayout_2.addWidget(self.pushButton_connect, 0, Qt.AlignHCenter)
+        self.horizontalLayout_8.addWidget(self.pushButton_connect, 0, Qt.AlignHCenter)
+
+
+        self.verticalLayout_10.addLayout(self.horizontalLayout_8)
+
+        self.pushButton_start = QPushButton(self.groupBox_3)
+        self.pushButton_start.setObjectName(u"pushButton_start")
+        self.pushButton_start.setMinimumSize(QSize(120, 40))
+        self.pushButton_start.setMaximumSize(QSize(120, 40))
+        self.pushButton_start.setFont(font)
+        self.pushButton_start.setInputMethodHints(Qt.ImhNone)
+        self.pushButton_start.setCheckable(True)
+
+        self.verticalLayout_10.addWidget(self.pushButton_start)
+
+
+        self.verticalLayout_2.addWidget(self.groupBox_3)
+
+        self.groupBox_2 = QGroupBox(self.tab)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.verticalLayout_9 = QVBoxLayout(self.groupBox_2)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.lineEdit = QLineEdit(self.groupBox_2)
+        self.lineEdit.setObjectName(u"lineEdit")
+
+        self.verticalLayout_9.addWidget(self.lineEdit)
+
+        self.pushButton_3 = QPushButton(self.groupBox_2)
+        self.pushButton_3.setObjectName(u"pushButton_3")
+        self.pushButton_3.setEnabled(True)
+        sizePolicy.setHeightForWidth(self.pushButton_3.sizePolicy().hasHeightForWidth())
+        self.pushButton_3.setSizePolicy(sizePolicy)
+        self.pushButton_3.setMinimumSize(QSize(120, 25))
+        self.pushButton_3.setMaximumSize(QSize(120, 25))
+        self.pushButton_3.setLayoutDirection(Qt.LeftToRight)
+
+        self.verticalLayout_9.addWidget(self.pushButton_3)
+
+
+        self.verticalLayout_2.addWidget(self.groupBox_2)
+
+        self.groupBox = QGroupBox(self.tab)
+        self.groupBox.setObjectName(u"groupBox")
+        self.verticalLayout_8 = QVBoxLayout(self.groupBox)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.pushButton_2 = QPushButton(self.groupBox)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+        self.pushButton_2.setMinimumSize(QSize(120, 25))
+        self.pushButton_2.setMaximumSize(QSize(120, 25))
+
+        self.verticalLayout_8.addWidget(self.pushButton_2)
+
+
+        self.verticalLayout_2.addWidget(self.groupBox)
 
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
-        self.pushButton = QPushButton(self.horizontalLayoutWidget)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setMinimumSize(QSize(120, 40))
-        self.pushButton.setMaximumSize(QSize(120, 40))
-        self.pushButton.setFont(font)
-        self.pushButton.setCheckable(False)
 
-        self.verticalLayout_2.addWidget(self.pushButton, 0, Qt.AlignHCenter)
+        self.verticalLayout_5.addLayout(self.verticalLayout_2)
 
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName(u"tab_2")
-        self.layoutWidget = QWidget(self.tab_2)
-        self.layoutWidget.setObjectName(u"layoutWidget")
-        self.layoutWidget.setGeometry(QRect(0, 0, 201, 671))
-        self.verticalLayout_3 = QVBoxLayout(self.layoutWidget)
+        self.verticalLayout_6 = QVBoxLayout(self.tab_2)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.verticalLayout_3 = QVBoxLayout()
         self.verticalLayout_3.setSpacing(0)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.groupBox_filter = QGroupBox(self.layoutWidget)
-        self.groupBox_filter.setObjectName(u"groupBox_filter")
-        self.verticalLayout_11 = QVBoxLayout(self.groupBox_filter)
+        self.Scale = QGroupBox(self.tab_2)
+        self.Scale.setObjectName(u"Scale")
+        self.verticalLayout_11 = QVBoxLayout(self.Scale)
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.label_8 = QLabel(self.Scale)
+        self.label_8.setObjectName(u"label_8")
+
+        self.horizontalLayout_6.addWidget(self.label_8)
+
+        self.comboBox = QComboBox(self.Scale)
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.setObjectName(u"comboBox")
+        self.comboBox.setMaximumSize(QSize(61, 16777215))
+
+        self.horizontalLayout_6.addWidget(self.comboBox)
+
+        self.label_9 = QLabel(self.Scale)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setMaximumSize(QSize(25, 25))
+
+        self.horizontalLayout_6.addWidget(self.label_9)
+
+
+        self.verticalLayout_11.addLayout(self.horizontalLayout_6)
+
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.label_10 = QLabel(self.Scale)
+        self.label_10.setObjectName(u"label_10")
+
+        self.horizontalLayout_7.addWidget(self.label_10)
+
+        self.comboBox_2 = QComboBox(self.Scale)
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.addItem("")
+        self.comboBox_2.setObjectName(u"comboBox_2")
+        self.comboBox_2.setMaximumSize(QSize(61, 16777215))
+
+        self.horizontalLayout_7.addWidget(self.comboBox_2)
+
+        self.label_11 = QLabel(self.Scale)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setMaximumSize(QSize(25, 25))
+
+        self.horizontalLayout_7.addWidget(self.label_11)
+
+
+        self.verticalLayout_11.addLayout(self.horizontalLayout_7)
+
+
+        self.verticalLayout_3.addWidget(self.Scale)
+
+        self.groupBox_filter = QGroupBox(self.tab_2)
+        self.groupBox_filter.setObjectName(u"groupBox_filter")
+        self.verticalLayout_7 = QVBoxLayout(self.groupBox_filter)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.label_4 = QLabel(self.groupBox_filter)
         self.label_4.setObjectName(u"label_4")
 
-        self.verticalLayout_11.addWidget(self.label_4)
+        self.horizontalLayout_2.addWidget(self.label_4)
 
         self.comboBox_highpass = QComboBox(self.groupBox_filter)
         self.comboBox_highpass.addItem("")
@@ -123,12 +249,23 @@ class Ui_MainWindow(object):
         self.comboBox_highpass.addItem("")
         self.comboBox_highpass.setObjectName(u"comboBox_highpass")
 
-        self.verticalLayout_11.addWidget(self.comboBox_highpass)
+        self.horizontalLayout_2.addWidget(self.comboBox_highpass)
 
+        self.label = QLabel(self.groupBox_filter)
+        self.label.setObjectName(u"label")
+        self.label.setMaximumSize(QSize(25, 25))
+
+        self.horizontalLayout_2.addWidget(self.label)
+
+
+        self.verticalLayout_7.addLayout(self.horizontalLayout_2)
+
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.label_5 = QLabel(self.groupBox_filter)
         self.label_5.setObjectName(u"label_5")
 
-        self.verticalLayout_11.addWidget(self.label_5)
+        self.horizontalLayout_3.addWidget(self.label_5)
 
         self.comboBox_lowpass = QComboBox(self.groupBox_filter)
         self.comboBox_lowpass.addItem("")
@@ -137,12 +274,23 @@ class Ui_MainWindow(object):
         self.comboBox_lowpass.addItem("")
         self.comboBox_lowpass.setObjectName(u"comboBox_lowpass")
 
-        self.verticalLayout_11.addWidget(self.comboBox_lowpass)
+        self.horizontalLayout_3.addWidget(self.comboBox_lowpass)
 
+        self.label_2 = QLabel(self.groupBox_filter)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setMaximumSize(QSize(25, 25))
+
+        self.horizontalLayout_3.addWidget(self.label_2)
+
+
+        self.verticalLayout_7.addLayout(self.horizontalLayout_3)
+
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.label_6 = QLabel(self.groupBox_filter)
         self.label_6.setObjectName(u"label_6")
 
-        self.verticalLayout_11.addWidget(self.label_6)
+        self.horizontalLayout_5.addWidget(self.label_6)
 
         self.comboBox_notch = QComboBox(self.groupBox_filter)
         self.comboBox_notch.addItem("")
@@ -150,34 +298,27 @@ class Ui_MainWindow(object):
         self.comboBox_notch.addItem("")
         self.comboBox_notch.setObjectName(u"comboBox_notch")
 
-        self.verticalLayout_11.addWidget(self.comboBox_notch)
+        self.horizontalLayout_5.addWidget(self.comboBox_notch)
+
+        self.label_7 = QLabel(self.groupBox_filter)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setMinimumSize(QSize(0, 0))
+        self.label_7.setMaximumSize(QSize(25, 25))
+
+        self.horizontalLayout_5.addWidget(self.label_7)
+
+
+        self.verticalLayout_7.addLayout(self.horizontalLayout_5)
 
 
         self.verticalLayout_3.addWidget(self.groupBox_filter)
 
-        self.groupBox_record = QGroupBox(self.layoutWidget)
-        self.groupBox_record.setObjectName(u"groupBox_record")
-        self.verticalLayout_7 = QVBoxLayout(self.groupBox_record)
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
-        self.pushButton_start = QPushButton(self.groupBox_record)
-        self.pushButton_start.setObjectName(u"pushButton_start")
-        sizePolicy.setHeightForWidth(self.pushButton_start.sizePolicy().hasHeightForWidth())
-        self.pushButton_start.setSizePolicy(sizePolicy)
-        self.pushButton_start.setMaximumSize(QSize(100, 30))
-        icon1 = QIcon()
-        icon1.addFile(u":/icons/resources/icons/play-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
-        icon1.addFile(u":/icons/resources/icons/stop-circle.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.pushButton_start.setIcon(icon1)
-        self.pushButton_start.setCheckable(True)
-
-        self.verticalLayout_7.addWidget(self.pushButton_start)
-
-
-        self.verticalLayout_3.addWidget(self.groupBox_record)
-
         self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_3.addItem(self.verticalSpacer_7)
+
+
+        self.verticalLayout_6.addLayout(self.verticalLayout_3)
 
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QWidget()
@@ -286,6 +427,8 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget.setCurrentIndex(0)
+        self.comboBox.setCurrentIndex(2)
+        self.comboBox_2.setCurrentIndex(0)
         self.comboBox_highpass.setCurrentIndex(2)
         self.comboBox_lowpass.setCurrentIndex(0)
         self.comboBox_notch.setCurrentIndex(1)
@@ -298,11 +441,37 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"eConAlpha", None))
         self.label_menu_logo.setText("")
+        self.groupBox_3.setTitle(QCoreApplication.translate("MainWindow", u"Config", None))
+        self.pushButton_search.setText(QCoreApplication.translate("MainWindow", u"Search", None))
         self.pushButton_connect.setText(QCoreApplication.translate("MainWindow", u"Connect", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Start", None))
+        self.pushButton_start.setText(QCoreApplication.translate("MainWindow", u"Start", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", u"Data Recording", None))
+        self.pushButton_3.setText(QCoreApplication.translate("MainWindow", u"Record", None))
+        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"LabStreamingLayer", None))
+        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Start streaming", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"Device", None))
+        self.Scale.setTitle(QCoreApplication.translate("MainWindow", u"Scale", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Time", None))
+        self.comboBox.setItemText(0, QCoreApplication.translate("MainWindow", u"1", None))
+        self.comboBox.setItemText(1, QCoreApplication.translate("MainWindow", u"2", None))
+        self.comboBox.setItemText(2, QCoreApplication.translate("MainWindow", u"5", None))
+        self.comboBox.setItemText(3, QCoreApplication.translate("MainWindow", u"10", None))
+        self.comboBox.setItemText(4, QCoreApplication.translate("MainWindow", u"15", None))
+
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"S", None))
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Vert", None))
+        self.comboBox_2.setItemText(0, QCoreApplication.translate("MainWindow", u"10\u00b5V", None))
+        self.comboBox_2.setItemText(1, QCoreApplication.translate("MainWindow", u"20\u00b5V", None))
+        self.comboBox_2.setItemText(2, QCoreApplication.translate("MainWindow", u"40\u00b5V", None))
+        self.comboBox_2.setItemText(3, QCoreApplication.translate("MainWindow", u"100\u00b5V", None))
+        self.comboBox_2.setItemText(4, QCoreApplication.translate("MainWindow", u"300\u00b5V", None))
+        self.comboBox_2.setItemText(5, QCoreApplication.translate("MainWindow", u"700\u00b5V", None))
+        self.comboBox_2.setItemText(6, QCoreApplication.translate("MainWindow", u"1mV", None))
+        self.comboBox_2.setItemText(7, QCoreApplication.translate("MainWindow", u"3mV", None))
+
+        self.label_11.setText(QCoreApplication.translate("MainWindow", u"/Div", None))
         self.groupBox_filter.setTitle(QCoreApplication.translate("MainWindow", u"Filter", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"High Pass (Hz)", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"High Pass", None))
         self.comboBox_highpass.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.comboBox_highpass.setItemText(1, QCoreApplication.translate("MainWindow", u"0.1", None))
         self.comboBox_highpass.setItemText(2, QCoreApplication.translate("MainWindow", u"1", None))
@@ -310,23 +479,24 @@ class Ui_MainWindow(object):
         self.comboBox_highpass.setItemText(4, QCoreApplication.translate("MainWindow", u"20", None))
 
         self.comboBox_highpass.setCurrentText(QCoreApplication.translate("MainWindow", u"1", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Low Pass (Hz)", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Hz", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Low Pass", None))
         self.comboBox_lowpass.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.comboBox_lowpass.setItemText(1, QCoreApplication.translate("MainWindow", u"30", None))
         self.comboBox_lowpass.setItemText(2, QCoreApplication.translate("MainWindow", u"40", None))
         self.comboBox_lowpass.setItemText(3, QCoreApplication.translate("MainWindow", u"70", None))
 
-        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Notch (Hz)", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Hz", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", u"Notch", None))
         self.comboBox_notch.setItemText(0, QCoreApplication.translate("MainWindow", u"None", None))
         self.comboBox_notch.setItemText(1, QCoreApplication.translate("MainWindow", u"50", None))
         self.comboBox_notch.setItemText(2, QCoreApplication.translate("MainWindow", u"60", None))
 
-        self.groupBox_record.setTitle(QCoreApplication.translate("MainWindow", u"LSL", None))
-        self.pushButton_start.setText(QCoreApplication.translate("MainWindow", u"Start", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Hz", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"Display", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"Channels", None))
         self.label_3.setText("")
         self.label_battery.setText("")
-        self.GroupBox_signal.setTitle(QCoreApplication.translate("MainWindow", u"EMG Signal(100\u00b5V/Div-2s/page)", None))
+        self.GroupBox_signal.setTitle(QCoreApplication.translate("MainWindow", u"EEG Signal(100\u00b5V/Div-2s/page)", None))
     # retranslateUi
 
