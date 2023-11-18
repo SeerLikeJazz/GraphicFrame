@@ -84,22 +84,22 @@ class MyDevice(Process):
                 traceback.print_exc()
 
     def run(self):
-        print("port", self.port)
+        # print("port", self.port)
         from .data_parser import Parser
         import threading
-
-        self.socket_flag.value = 1
-        self.__socket = device_socket(self.port)
-        try:
-            self.__socket.connect_socket()
-            self.__socket.stop_recv()
-            self.__battery.value = self.__socket.send_heartbeat()
-        except Exception:
-            self.socket_flag.value = 4
-            self.__socket.close_socket()
-            return
-
-        print("cap socket connected!")
+        #
+        # self.socket_flag.value = 1
+        # self.__socket = device_socket(self.port)
+        # try:
+        #     self.__socket.connect_socket()
+        #     self.__socket.stop_recv()
+        #     self.__battery.value = self.__socket.send_heartbeat()
+        # except Exception:
+        #     self.socket_flag.value = 4
+        #     self.__socket.close_socket()
+        #     return
+        #
+        # print("cap socket connected!")
         self.sys_data = 0
         self.__timestamp = time.time()
         self.__recv_queue = queue.Queue()

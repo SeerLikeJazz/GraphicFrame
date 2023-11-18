@@ -7,6 +7,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     from PySide6.QtGui import QCloseEvent
     from PySide6.QtWidgets import QAbstractButton
     import numpy as np
+
     def __init__(self):
         super().__init__()
         self.setupUi(self)
@@ -39,33 +40,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.gridLayout_plot.addWidget(self.eeg_plot)
         self.stackedWidget.setCurrentWidget(self.page_signal)
 
-        # self.listWidget.clicked.connect(self.listclicked)
+        self.listWidget.clicked.connect(self.listclicked)
+        # self.signal_com.connect(self.selectCom)
+        self.devicePort = None
 
-    # def listclicked(self):
+    def listclicked(self):
+        self.devicePort = self.listWidget.currentItem().text()[10:-1]
+        print(self.listWidget.currentItem().text()[10:-1])
 
-        # self.close()
-        # self.deleteLater()
-
-
-    def process_data(self):
-        data_frames = np.array(self.iRecorder.get_data(), dtype=np.float32)
-        if len(data_frames) == 0:
-            return
-
-        data_frames[:, : self.eeg_channels] = (
-            data_frames[:, : self.eeg_channels] * 0.02235174
-        )
-        plotdata = self.filt_data(data_frames)
-
-        for frame, plot in zip(data_frames, plotdata):
-            self.eeg_plot.update_data(plot)
-
+    # 按键
     @Slot()
     def on_pushButton_search_clicked(self):
-            ports = MyDevice.get_device()
-            for port in ports:
-                self.listWidget.addItem(port.description)
+        self.listWidget.clear()
+        ports = MyDevice.get_device()
+        for port in ports:
+            self.listWidget.addItem(port.description)
 
+    # 按键
     @Slot(bool)
     def on_pushButton_start_toggled(self, checked):
         if checked:
@@ -88,7 +79,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_pushButton_connect_toggled(self, checked):
         if checked:
             # port = MyDevice.get_device()
-            port = "COM50"
+            port = self.devicePort
             if port is not None:
                 self.pushButton_connect.setText("Disconnect")
                 self.iRecorder = MyDevice(
@@ -96,45 +87,54 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.socket_flag,
                 )
 
+                self.socket_flag.value = 1
+                self.__socket = device_socket(port)
+                try:
+                    self.__socket.connect_socket()
+                    self.__socket.stop_recv()
+                    # self.__battery.value = self.__socket.send_heartbeat()
+                except Exception:
+                    self.socket_flag.value = 4
+                    self.__socket.close_socket()
+                    return
 
-                # print("port", port)
-                #
-                # self.socket_flag.value = 1
-                # self.__socket = device_socket(port)
-                # try:
-                #     self.__socket.connect_socket()
-                #     self.__socket.stop_recv()
-                #     self.__battery.value = self.__socket.send_heartbeat()
-                # except Exception:
-                #     self.socket_flag.value = 4
-                #     self.__socket.close_socket()
-                #     return
-                #
-                # print("cap socket connected!")
+                print("cap socket connected!")
 
 
 
-                self.iRecorder.start()
-                self.battery_value = -1
-                self.data_timer.start(15)
-                self.eeg_watchdog_timer.start(500)
-            else:
-                QMessageBox.information(
-                    self,
-                    "Warning",
-                    "No device found, please make sure receiver is plugged in.",
-                )
-                self.pushButton_connect.setChecked(False)
+        #         self.iRecorder.start()
+        #         self.battery_value = -1
+        #         self.data_timer.start(15)
+        #         self.eeg_watchdog_timer.start(500)
+        #     else:
+        #         QMessageBox.information(
+        #             self,
+        #             "Warning",
+        #             "No device found, please make sure receiver is plugged in.",
+        #         )
+        #         self.pushButton_connect.setChecked(False)
+        #
+        # else:
+        #     self.data_timer.stop()
+        #     self.eeg_watchdog_timer.stop()
+        #     self.pushButton_connect.setText("Connect")
+        #     self.label_battery.setText("")
+        #     if self.iRecorder is not None:
+        #         self.iRecorder.close_cap()
+        #         self.iRecorder.terminate()
+        #         self.iRecorder = None
+    def process_data(self):
+        data_frames = np.array(self.iRecorder.get_data(), dtype=np.float32)
+        if len(data_frames) == 0:
+            return
 
-        else:
-            self.data_timer.stop()
-            self.eeg_watchdog_timer.stop()
-            self.pushButton_connect.setText("Connect")
-            self.label_battery.setText("")
-            if self.iRecorder is not None:
-                self.iRecorder.close_cap()
-                self.iRecorder.terminate()
-                self.iRecorder = None
+        data_frames[:, : self.eeg_channels] = (
+            data_frames[:, : self.eeg_channels] * 0.02235174
+        )
+        plotdata = self.filt_data(data_frames)
+
+        for frame, plot in zip(data_frames, plotdata):
+            self.eeg_plot.update_data(plot)
 
     def emg_watchdog(self):
         if self.socket_flag.value in [0, 1]:
