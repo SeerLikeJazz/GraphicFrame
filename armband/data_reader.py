@@ -31,8 +31,8 @@ class MyDevice(Process):
         # return None
 
     def start_acquisition_data(self):
-        if self.__cap_status.value == CAP_TERMINATED:
-            return
+        # if self.__cap_status.value == CAP_TERMINATED:
+        #     return
         self.__cap_status.value = CAP_SIGNAL_START
         while self.__cap_status.value != CAP_SIGNAL:
             continue
@@ -84,26 +84,24 @@ class MyDevice(Process):
                 traceback.print_exc()
 
     def run(self):
-        # print("port", self.port)
         from .data_parser import Parser
         import threading
-        #
-        # self.socket_flag.value = 1
-        # self.__socket = device_socket(self.port)
-        # try:
-        #     self.__socket.connect_socket()
-        #     self.__socket.stop_recv()
-        #     self.__battery.value = self.__socket.send_heartbeat()
-        # except Exception:
-        #     self.socket_flag.value = 4
-        #     self.__socket.close_socket()
-        #     return
-        #
-        # print("cap socket connected!")
+
+        self.socket_flag.value = 1
+        self.__socket = device_socket(self.port) # 打开了串口
+        try:
+            self.__socket.connect_socket()
+            self.__socket.stop_recv()
+            self.__battery.value = self.__socket.send_heartbeat()
+        except Exception:
+            self.socket_flag.value = 4
+            self.__socket.close_socket()
+            return
+
         self.sys_data = 0
         self.__timestamp = time.time()
         self.__recv_queue = queue.Queue()
-        self.__cap_status.value = CAP_SIGNAL_START
+        # self.__cap_status.value = CAP_SIGNAL_START
         self.__parser = Parser(32,500)
         self.__run_flag = True
         self.__recv_run_flag = False

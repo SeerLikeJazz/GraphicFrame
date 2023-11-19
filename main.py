@@ -60,7 +60,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @Slot(bool)
     def on_pushButton_start_toggled(self, checked):
         if checked:
-            self.iRecorder.start()
+            # self.iRecorder.start()
+            self.iRecorder.start_acquisition_data()
             self.battery_value = -1
             self.data_timer.start(15)
             self.eeg_watchdog_timer.start(500)
@@ -72,13 +73,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.label_battery.setText("")
             if self.iRecorder is not None:
                 self.iRecorder.close_cap()
-                self.iRecorder.terminate()
+                # self.iRecorder.terminate()
                 # self.iRecorder = None
 
     @Slot(bool)
     def on_pushButton_connect_toggled(self, checked):
         if checked:
-            # port = MyDevice.get_device()
             port = self.devicePort
             if port is not None:
                 self.pushButton_connect.setText("Disconnect")
@@ -86,23 +86,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     port,
                     self.socket_flag,
                 )
+                self.iRecorder.start()
 
-                self.socket_flag.value = 1
-                self.__socket = device_socket(port)
-                try:
-                    self.__socket.connect_socket()
-                    self.__socket.stop_recv()
-                    # self.__battery.value = self.__socket.send_heartbeat()
-                except Exception:
-                    self.socket_flag.value = 4
-                    self.__socket.close_socket()
-                    return
-
-                print("cap socket connected!")
-
-
-
-        #         self.iRecorder.start()
         #         self.battery_value = -1
         #         self.data_timer.start(15)
         #         self.eeg_watchdog_timer.start(500)

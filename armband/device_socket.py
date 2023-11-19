@@ -34,7 +34,7 @@ class UsbCDC_socket():
         # self.__socket.write(self.order['close'])
         time.sleep(0.1)
         self.__socket.read_all()
-        self.__socket = None
+        # self.__socket = None
         print('socket closed')
 
     def recv_socket(self, buffersize: int = 2048):
