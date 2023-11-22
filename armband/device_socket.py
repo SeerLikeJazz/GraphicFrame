@@ -20,6 +20,7 @@ class UsbCDC_socket():
         return list(comports())
 
     def __init__(self, port) -> None:
+        super().__init__()
         import serial
         self.__socket = serial.Serial(port=port)  # If a "port" is given, then the port will be opened immediately
 
@@ -34,10 +35,10 @@ class UsbCDC_socket():
         # self.__socket.write(self.order['close'])
         time.sleep(0.1)
         self.__socket.read_all()
-        # self.__socket = None
+        self.__socket = None
         print('socket closed')
 
-    def recv_socket(self, buffersize: int = 2048):
+    def recv_socket(self, buffersize: int = 512):
         return self.__socket.read(buffersize)
 
     # def start_impe(self):
@@ -58,9 +59,9 @@ class UsbCDC_socket():
 
     def send_heartbeat(self):
         self.__socket.write(self.order['B'])
-        time.sleep(0.1)
+        time.sleep(0.5)
         ret = self.__socket.read(len(self.order['B']) + 1)
-        print('batt raw', ret)
+        # print('batt raw', ret)
         battery = int(ret[-1])
         print('batt level:', battery)
         return battery

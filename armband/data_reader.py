@@ -30,13 +30,6 @@ class MyDevice(Process):
         #         return device.description
         # return None
 
-    def start_acquisition_data(self):
-        # if self.__cap_status.value == CAP_TERMINATED:
-        #     return
-        self.__cap_status.value = CAP_SIGNAL_START
-        while self.__cap_status.value != CAP_SIGNAL:
-            continue
-
     def get_data(self):
         data = []
         try:
@@ -48,6 +41,13 @@ class MyDevice(Process):
         except Exception:
             traceback.print_exc()
         return data  # (channels, length)
+
+    def start_acquisition_data(self):
+        if self.__cap_status.value == CAP_TERMINATED:
+            return
+        self.__cap_status.value = CAP_SIGNAL_START
+        while self.__cap_status.value != CAP_SIGNAL:
+            continue
 
     def stop_acquisition(self):
         if self.__cap_status.value == CAP_TERMINATED:
@@ -68,10 +68,7 @@ class MyDevice(Process):
         return self.__battery.value
 
     def socket_recv(self):
-        while self.__run_flag:
-            if not self.__recv_run_flag:
-                time.sleep(0.2)
-                continue
+        while self.__ThreadSwitch_of_socket_recv:
             try:
                 data = self.__socket.recv_socket()
                 if len(data) != 0:
@@ -101,10 +98,9 @@ class MyDevice(Process):
         self.sys_data = 0
         self.__timestamp = time.time()
         self.__recv_queue = queue.Queue()
-        # self.__cap_status.value = CAP_SIGNAL_START
+        self.__cap_status.value = CAP_IDLE_START
         self.__parser = Parser(32,500)
-        self.__run_flag = True
-        self.__recv_run_flag = False
+        self.__ThreadSwitch_of_socket_recv = False
         self.__recv_thread = threading.Thread(target=self.socket_recv, daemon=True)
         self.__recv_thread.start()
         self.socket_flag.value = 2
@@ -123,7 +119,9 @@ class MyDevice(Process):
                     except queue.Empty:
                         print("Thread queue bug caught")
                 try:
-                    self.__recv_run_flag = True
+                    self.__ThreadSwitch_of_socket_recv = True  # 线程打开前，while循环先打开
+                    self.__recv_thread = threading.Thread(target=self.socket_recv, daemon=True)
+                    self.__recv_thread.start() # 打开线程
                     self.__socket.start_data()
                     self.__cap_status.value = CAP_SIGNAL
                     self.__timestamp = time.time()
@@ -158,7 +156,9 @@ class MyDevice(Process):
                 try:
                     print("CAP_IDLE_START")
                     print("DROPPED PACKETS COUNT:", self.__parser.packet_drop_count)
-                    self.__recv_run_flag = False
+                    self.__ThreadSwitch_of_socket_recv = False
+                    self.__recv_thread.join()
+                    print("joined")
                     self.__socket.stop_recv()
                     self.__cap_status.value = CAP_IDLE
                     self.__timestamp = time.time()
@@ -173,17 +173,15 @@ class MyDevice(Process):
                         self.__battery.value = self.__socket.send_heartbeat()
                         # heartbeat to keep socket alive
                         self.__timestamp = time.time()
-                        print("Ah, ah, ah, ah\nStayin' alive, stayin' alive")
+                        print(">>>Stayin' alive, stayin' alive")
                     except:
                         traceback.print_exc()
                         self.socket_flag.value = 5
                         self.__cap_status.value = CAP_END
             elif self.__cap_status.value == CAP_END:
                 print("CAP_END")
-                self.__recv_run_flag = False
-                self.__run_flag = False
+                self.__ThreadSwitch_of_socket_recv = False
                 time.sleep(0.1)
-                self.__recv_thread.join(timeout=0)
                 try:
                     self.__socket.stop_recv()
                 except:

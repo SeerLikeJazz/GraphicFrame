@@ -41,7 +41,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackedWidget.setCurrentWidget(self.page_signal)
 
         self.listWidget.clicked.connect(self.listclicked)
-        # self.signal_com.connect(self.selectCom)
         self.devicePort = None
 
     def listclicked(self):
@@ -71,10 +70,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.eeg_watchdog_timer.stop()
             self.pushButton_start.setText("Start")
             self.label_battery.setText("")
-            if self.iRecorder is not None:
-                self.iRecorder.close_cap()
-                # self.iRecorder.terminate()
-                # self.iRecorder = None
+            self.iRecorder.stop_acquisition()
 
     @Slot(bool)
     def on_pushButton_connect_toggled(self, checked):
@@ -87,27 +83,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.socket_flag,
                 )
                 self.iRecorder.start()
+            else:
+                QMessageBox.information(
+                    self,
+                    "Warning",
+                    "No device found, please make sure receiver is plugged in.",
+                )
+                self.pushButton_connect.setChecked(False)
+        else:
+            self.data_timer.stop()
+            self.eeg_watchdog_timer.stop()
+            self.pushButton_start.setChecked(False)
+            self.pushButton_start.setText("Start")
+            self.label_battery.setText("")
+            self.iRecorder.stop_acquisition()
+            self.pushButton_connect.setText("Connect")
+            if self.iRecorder is not None:
+                self.iRecorder.close_cap()
+                self.iRecorder.terminate()
+                self.iRecorder = None
 
-        #         self.battery_value = -1
-        #         self.data_timer.start(15)
-        #         self.eeg_watchdog_timer.start(500)
-        #     else:
-        #         QMessageBox.information(
-        #             self,
-        #             "Warning",
-        #             "No device found, please make sure receiver is plugged in.",
-        #         )
-        #         self.pushButton_connect.setChecked(False)
-        #
-        # else:
-        #     self.data_timer.stop()
-        #     self.eeg_watchdog_timer.stop()
-        #     self.pushButton_connect.setText("Connect")
-        #     self.label_battery.setText("")
-        #     if self.iRecorder is not None:
-        #         self.iRecorder.close_cap()
-        #         self.iRecorder.terminate()
-        #         self.iRecorder = None
     def process_data(self):
         data_frames = np.array(self.iRecorder.get_data(), dtype=np.float32)
         if len(data_frames) == 0:
