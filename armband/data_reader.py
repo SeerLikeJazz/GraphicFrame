@@ -103,7 +103,7 @@ class MyDevice(Process):
         self.__ThreadSwitch_of_socket_recv = False
         self.__recv_thread = threading.Thread(target=self.socket_recv, daemon=True)
         self.__recv_thread.start()
-        self.socket_flag.value = 2
+        # self.socket_flag.value = 2
         while True:
             if self.__cap_status.value == CAP_SIGNAL_START:
                 print("CAP_SIGNAL_START")
@@ -168,6 +168,7 @@ class MyDevice(Process):
                     self.__cap_status.value = CAP_END
             elif self.__cap_status.value == CAP_IDLE:
                 time.sleep(0.1)
+                self.socket_flag.value = 2
                 if (time.time() - self.__timestamp) > 5:
                     try:
                         self.__battery.value = self.__socket.send_heartbeat()

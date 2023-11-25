@@ -28,7 +28,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.data_timer = QTimer(self)
         self.data_timer.timeout.connect(self.process_data)
         self.eeg_watchdog_timer = QTimer(self)
-        self.eeg_watchdog_timer.timeout.connect(self.emg_watchdog)
+        self.eeg_watchdog_timer.timeout.connect(self.emg_watchdog) # 更新电量、设置按钮状态
         self.stackedWidget.setCurrentIndex(0)
         self.socket_flag = Value("i", 0)
         self.iRecorder = None
@@ -40,49 +40,38 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.gridLayout_plot.addWidget(self.eeg_plot)
         self.stackedWidget.setCurrentWidget(self.page_signal)
 
-        self.listWidget.clicked.connect(self.listclicked)
         self.devicePort = None
-
-    def listclicked(self):
-        self.devicePort = self.listWidget.currentItem().text()[10:-1]
-        print(self.listWidget.currentItem().text()[10:-1])
+        self.listWidget.clicked.connect(self.listclicked) # Port列表点击事件
+        self.pushButton_start.setEnabled(False)  # 失能start按钮（置灰）
+        self.pushButton_connect.setEnabled(False)  # 失能connect按钮（置灰）
 
     # 按键
     @Slot()
     def on_pushButton_search_clicked(self):
-        self.listWidget.clear()
+        self.pushButton_connect.setEnabled(False)  # 失能按钮（置灰）
+        self.listWidget.clear() # 清除列表
         ports = MyDevice.get_device()
         for port in ports:
             self.listWidget.addItem(port.description)
 
-    # 按键
-    @Slot(bool)
-    def on_pushButton_start_toggled(self, checked):
-        if checked:
-            # self.iRecorder.start()
-            self.iRecorder.start_acquisition_data()
-            self.battery_value = -1
-            self.data_timer.start(15)
-            self.eeg_watchdog_timer.start(500)
-            self.pushButton_start.setText("Stop")
-        else:
-            self.data_timer.stop()
-            self.eeg_watchdog_timer.stop()
-            self.pushButton_start.setText("Start")
-            self.label_battery.setText("")
-            self.iRecorder.stop_acquisition()
+    def listclicked(self):
+        self.devicePort = self.listWidget.currentItem().text()[10:-1]
+        print(self.listWidget.currentItem().text()[10:-1])
+        self.pushButton_connect.setEnabled(True)  # 使能connect按钮
 
     @Slot(bool)
     def on_pushButton_connect_toggled(self, checked):
         if checked:
             port = self.devicePort
             if port is not None:
-                self.pushButton_connect.setText("Disconnect")
+                self.pushButton_connect.setText("Connecting")
                 self.iRecorder = MyDevice(
                     port,
                     self.socket_flag,
                 )
                 self.iRecorder.start()
+                self.battery_value = -1  # connect的时候就显示电量
+                self.eeg_watchdog_timer.start(500)
             else:
                 QMessageBox.information(
                     self,
@@ -93,15 +82,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self.data_timer.stop()
             self.eeg_watchdog_timer.stop()
-            self.pushButton_start.setChecked(False)
+            self.iRecorder.stop_acquisition()  # 设置进程run的状态，发送'R'指令
             self.pushButton_start.setText("Start")
             self.label_battery.setText("")
-            self.iRecorder.stop_acquisition()
             self.pushButton_connect.setText("Connect")
+            self.pushButton_search.setEnabled(True)  # 使能search按钮
+            self.pushButton_start.setEnabled(False)  # 失能start按钮
             if self.iRecorder is not None:
                 self.iRecorder.close_cap()
                 self.iRecorder.terminate()
                 self.iRecorder = None
+
+    # 按键
+    @Slot(bool)
+    def on_pushButton_start_toggled(self, checked):
+        if checked:
+            self.iRecorder.start_acquisition_data()
+            self.data_timer.start(15)
+            self.pushButton_start.setText("Stop")
+        else:
+            self.data_timer.stop()
+            self.pushButton_start.setText("Start")
+            self.iRecorder.stop_acquisition()
 
     def process_data(self):
         data_frames = np.array(self.iRecorder.get_data(), dtype=np.float32)
@@ -120,6 +122,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.socket_flag.value in [0, 1]:
             return
         elif self.socket_flag.value == 2:
+            self.pushButton_connect.setText("Disconnect")
+            self.pushButton_start.setEnabled(True)  # 使能start按钮
+            self.pushButton_search.setEnabled(False)  # 失能search按钮
             bat = self.iRecorder.get_battery_value()
             if (self.battery_value != bat) and (bat >= 0) and (bat <= 100):
                 self.battery_value = bat
@@ -148,27 +153,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, "Warning", warn + ", please reconnect.")
             self.pushButton_connect.setChecked(False)
 
-### 页面切换
-    # @Slot(QAbstractButton)
-    # def on_buttonGroup_buttonClicked(self, button):
-    #     self.eeg_plot.resize(1, 1)
-    #     if button == self.pushButton_menu_connect:
-    #         self.stackedWidget.setCurrentWidget(self.page_connect)
-    #     elif button == self.pushButton_menu_signal:
-    #         self.gridLayout_plot.addWidget(self.eeg_plot)
-    #         self.stackedWidget.setCurrentWidget(self.page_signal)
-    #     elif button == self.pushButton_menu_train:
-    #         self.ges_manager.set_gestures(self.horizontalLayout_7, True)
-    #         self.ges_manager.set_focus(0)
-    #         self.gridLayout_sig.addWidget(self.eeg_plot)
-    #         self.stackedWidget.setCurrentWidget(self.page_train)
-    #     elif button == self.pushButton_menu_test:
-    #         self.stackedWidget.setCurrentWidget(self.page_test)
-    #         self.ges_manager.set_gestures(self.horizontalLayout_5, False)
-    #     elif button == self.pushButton_menu_control:
-    #         self.stackedWidget.setCurrentWidget(self.page_application)
-    #     elif button == self.pushButton_menu_about:
-    #         self.stackedWidget.setCurrentWidget(self.page_about)
 
     @Slot()
     def on_comboBox_highpass_currentIndexChanged(self):
