@@ -314,7 +314,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="comboBox">
+                   <widget class="QComboBox" name="comboBox_timescale">
                     <property name="maximumSize">
                      <size>
                       <width>61</width>
@@ -376,7 +376,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="comboBox_2">
+                   <widget class="QComboBox" name="comboBox_vertscale">
                     <property name="maximumSize">
                      <size>
                       <width>61</width>
@@ -384,7 +384,7 @@
                      </size>
                     </property>
                     <property name="currentIndex">
-                     <number>0</number>
+                     <number>3</number>
                     </property>
                     <item>
                      <property name="text">
@@ -464,10 +464,10 @@
                   <item>
                    <widget class="QComboBox" name="comboBox_highpass">
                     <property name="currentText">
-                     <string>1</string>
+                     <string>0.1</string>
                     </property>
                     <property name="currentIndex">
-                     <number>2</number>
+                     <number>1</number>
                     </property>
                     <item>
                      <property name="text">
@@ -523,7 +523,7 @@
                   <item>
                    <widget class="QComboBox" name="comboBox_lowpass">
                     <property name="currentIndex">
-                     <number>0</number>
+                     <number>1</number>
                     </property>
                     <item>
                      <property name="text">

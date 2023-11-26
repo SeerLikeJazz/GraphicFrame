@@ -4,7 +4,7 @@ import time, random
 
 
 class SigPlot(pg.PlotWidget):
-    def __init__(self, fs=500, channels=8, timescale=5, vertscale=40) -> None:
+    def __init__(self, fs=500, channels=8, timescale=5, vertscale=40):
         super().__init__()
         self.fs = fs
         self.fps = int(self.fs / 55) # 55是刷新帧数
@@ -31,6 +31,16 @@ class SigPlot(pg.PlotWidget):
             self.__update_plot()
             self.last_position = 0
             self.curr_position = 0
+
+    def update_x_scale(self, time_scale):
+        self.time_scale = time_scale
+        self.__init_canvas()
+
+    def update_y_scale(self, voltage_scale):
+        self.auto_scale = voltage_scale
+        if self.auto_scale is not None:
+            self.vert_scale = voltage_scale
+        self.__set_y_ticks()
 
     def __update_plot(self):
         if self.last_position == self.curr_position:
@@ -74,29 +84,17 @@ class SigPlot(pg.PlotWidget):
         # 设置X轴宽度
         self.setXRange(0, self.display_length, padding=0)
         ax = self.plotItem.getAxis("bottom")
-        ax.setTicks(
-            [
-                [
-                    (i, str(self.time_scale * i / self.display_length))
-                    for i in range(
-                        0, self.display_length + 1, int(self.display_length / 10)
-                    )
-                ]
-            ]
-        )
+        ax.setTicks([[(i, str(self.time_scale * i / self.display_length))
+                    for i in range(0, self.display_length+1, int(self.display_length / 10))
+                    ]])
 
     def __set_y_ticks(self):
-        # 设置Y轴高度
+    #     # 设置Y轴高度
         self.setYRange(0, self.channels * 2 * self.vert_scale, padding=0)
         ax = self.plotItem.getAxis("left")
-        ax.setTicks(
-            [
-                [
-                    ((i * 2 + 1) * self.vert_scale, "C" + str(i))
+        ax.setTicks([[((i * 2 + 1) * self.vert_scale, "C" + str(i))
                     for i in range(0, self.channels)
-                ]
-            ]
-        )
+                    ]])
 
     def wheelEvent(self, ev):
         pass

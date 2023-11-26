@@ -8,21 +8,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     from PySide6.QtWidgets import QAbstractButton
     import numpy as np
 
+
     def __init__(self):
+        from threading import Lock
         super().__init__()
         self.setupUi(self)
         self.eeg_channels = 32
         self.fs = 500
-        timescale = 5  # seconds
-        vertscale = 50  # uV
+        self.time_scale = 5  # seconds
+        self.vert_scale = 100  # uV
         self.GroupBox_signal.setTitle(
-            "EEG Signal({}\u00b5V/Div-{}s/page)".format(int(vertscale), timescale)
+            "EEG Signal({}\u00b5V/Div-{}s/page)".format(int(self.vert_scale), self.time_scale)
         )
         self.eeg_plot = SigPlot(
             fs=self.fs,
             channels=self.eeg_channels,
-            timescale=timescale,
-            vertscale=vertscale,
+            timescale=self.time_scale,
+            vertscale=self.vert_scale,
         )
 
         self.data_timer = QTimer(self)
@@ -32,6 +34,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.stackedWidget.setCurrentIndex(0)
         self.socket_flag = Value("i", 0)
         self.iRecorder = None
+        self._thLock = Lock()
 
         self.on_comboBox_highpass_currentIndexChanged()
         self.on_comboBox_lowpass_currentIndexChanged()
@@ -44,6 +47,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.listWidget.clicked.connect(self.listclicked) # Port列表点击事件
         self.pushButton_start.setEnabled(False)  # 失能start按钮（置灰）
         self.pushButton_connect.setEnabled(False)  # 失能connect按钮（置灰）
+        # connect slot
+        self.comboBox_timescale.currentIndexChanged.connect(self.timebaseChanged)
+        self.comboBox_timescale.setItemData(0, 1.0)
+        self.comboBox_timescale.setItemData(1, 2.0)
+        self.comboBox_timescale.setItemData(2, 5.0)
+        self.comboBox_timescale.setItemData(3, 10.0)
+        self.comboBox_timescale.setItemData(4, 15.0)
+        self.comboBox_vertscale.currentIndexChanged.connect(self.scaleChanged)
+        self.comboBox_vertscale.setItemData(0, 10)
+        self.comboBox_vertscale.setItemData(1, 20)
+        self.comboBox_vertscale.setItemData(2, 40)
+        self.comboBox_vertscale.setItemData(3, 100)
+        self.comboBox_vertscale.setItemData(4, 300)
+        self.comboBox_vertscale.setItemData(5, 700)
+        self.comboBox_vertscale.setItemData(6, 1000)
+        self.comboBox_vertscale.setItemData(7, 3000)
+
 
     # 按键
     @Slot()
@@ -88,6 +108,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_connect.setText("Connect")
             self.pushButton_search.setEnabled(True)  # 使能search按钮
             self.pushButton_start.setEnabled(False)  # 失能start按钮
+            self.pushButton_start.setChecked(False)
             if self.iRecorder is not None:
                 self.iRecorder.close_cap()
                 self.iRecorder.terminate()
@@ -153,7 +174,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, "Warning", warn + ", please reconnect.")
             self.pushButton_connect.setChecked(False)
 
+    def timebaseChanged(self):
+        self._thLock.acquire()
+        self.time_scale = self.comboBox_timescale.currentData()
+        self.GroupBox_signal.setTitle(
+            "EEG Signal("
+            + self.comboBox_vertscale.currentText()
+            + "/Div-"
+            + self.comboBox_timescale.currentText()
+            + "s/page)"
+        )
+        self.eeg_plot.update_x_scale(self.time_scale)
+        self._thLock.release()
 
+    def scaleChanged(self):
+        self._thLock.acquire()
+        self.vert_scale = self.comboBox_vertscale.currentData()
+        self.GroupBox_signal.setTitle(
+            "EEG Signal("
+            + self.comboBox_vertscale.currentText()
+            + "/Div-"
+            + self.comboBox_timescale.currentText()
+            + "s/page)"
+        )
+        self.eeg_plot.update_y_scale(self.vert_scale)
+        self._thLock.release()
     @Slot()
     def on_comboBox_highpass_currentIndexChanged(self):
         self.highpass = eval(self.comboBox_highpass.currentText())
